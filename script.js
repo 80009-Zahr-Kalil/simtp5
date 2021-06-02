@@ -6,8 +6,9 @@ const tiempoLlegadaA = 1;
 const tiempoLlegadaB = 5;
 const cantLlegadaA = 1;
 const cantLlegadaB = 3;
-const duracionViaje = 5;
+var duracionViaje;
 const capacidadVagon = 5;
+
 
 
 var tablaColas = document.getElementById("tablaColas");
@@ -33,17 +34,22 @@ function generarColasPA(cantEventos, desde, hasta){
     var colaA = 0; 
     var colaB = 0;
     var filaTabla = [ new Array(24).fill(0), new Array(24).fill(0)];
-    var grillaFinal = [];  
+    var grillaFinal = []; 
+    duracionViaje = 5;
+    var proxLlegadaB = 5;
     
 
     for (var i=1; i<=cantEventos ; i++){
-        
+  
         var reloj = i;
         var autosPerdidos = 0;
         var proxLlegadaA = reloj + tiempoLlegadaA;
-        var proxLlegadaB = reloj + tiempoLlegadaB;
         var finViaje = reloj + duracionViaje;
         var gananciaActual = 0;
+
+        if(reloj == proxLlegadaB){
+            proxLlegadaB += tiempoLlegadaB;
+        }
 
         var autoA = {
             tiempoEspera: -1
@@ -164,8 +170,150 @@ function rellenarTabla() {
 
 }
 
-function generarColasPB(){
+function generarColasPB(cantEventos, desde, hasta){
+    var ubicacionVagon = "A";
+    var autosPerdidosAC = 0;
+    var arrayAutosA = [];
+    var arrayAutosB = [];
+    var tiempoViajeAC = 0;
+    var cantAutosFinViaje = 0;
+    var gananciaAC = 0;
+    var colaA = 0; 
+    var colaB = 0;
+    var filaTabla = [ new Array(24).fill(0), new Array(24).fill(0)];
+    var grillaFinal = [];
+    var proxLlegadaB = 5;
+    var finViaje = 0;
+
+    for (var i=1; i<=cantEventos ; i++){
+        var reloj = i;
+        var autosPerdidos = 0;
+        duracionViaje = 5; 
+        var proxLlegadaA = reloj + tiempoLlegadaA;
+        var gananciaActual = 0;
+
+
+
+        if(reloj == proxLlegadaB){
+            proxLlegadaB += tiempoLlegadaB;
+        }
+
+        
+
+        var autoA = {
+            tiempoEspera: -1
+        }
+        arrayAutosA.push(autoA);
     
+        for (var k=0; k<arrayAutosA.length; k++){   
+            arrayAutosA[k].tiempoEspera++;   
+        }
+
+        if (reloj % 5 == 0 ){
+            for (var j=0; j<3 ; j++){
+                var autoB = {
+                    tiempoEspera: -1
+                }
+                arrayAutosB.push(autoB);
+            }
+
+            if(ubicacionVagon=="A"){
+                ubicacionVagon = "B";
+                var longitud = arrayAutosA.length;
+
+                if (longitud >= 5 ){
+                    arrayAutosA.splice(0,5);   
+                    cantAutosFinViaje += 5;
+                    gananciaActual+= (capacidadVagon * gananciaAuto) - costoViaje;
+                    tiempoViajeAC += 5;
+                    finViaje = reloj + duracionViaje ;
+                } 
+                else{
+                    arrayAutosA.splice(0,longitud);
+                    cantAutosFinViaje += longitud;
+                    gananciaActual+= (longitud * gananciaAuto) - costoViaje;
+                    if(longitud == 0){
+                        tiempoViajeAC += 3;
+                        duracionViaje = 3;
+                        finViaje = reloj + duracionViaje ;
+                    }
+                    else{
+                        tiempoViajeAC += 5;
+                        finViaje = reloj + duracionViaje ;
+                    }
+                }            
+            }
+
+            else{
+                ubicacionVagon = "A";
+                var longitud = arrayAutosB.length;
+
+                if (longitud >= 5 ){
+                    arrayAutosB.splice(0,5);   
+                    cantAutosFinViaje += 5;
+                    gananciaActual+= (capacidadVagon * gananciaAuto) - costoViaje;
+                    tiempoViajeAC += 5;
+                    finViaje = reloj + duracionViaje ;
+
+                } 
+                else{
+                    arrayAutosB.splice(0,longitud);
+                    cantAutosFinViaje += longitud;
+                    gananciaActual+= (longitud * gananciaAuto) - costoViaje;
+                    if(longitud == 0){
+                        tiempoViajeAC += 3;
+                        finViaje = reloj + duracionViaje ;
+                    }
+                    else{
+                        tiempoViajeAC += 5;
+                        finViaje = reloj + duracionViaje ;
+                    }
+                }                
+            }  
+        }
+
+        for (var k=0; k<arrayAutosB.length; k++){     
+            arrayAutosB[k].tiempoEspera++;
+        }
+      
+        if(arrayAutosA[0]?.tiempoEspera >= 12){
+            arrayAutosA.splice(0,1);
+            autosPerdidos++;
+            gananciaActual--;
+        }
+
+        for (var k=0; k<arrayAutosB.length; k++){           
+
+            if(arrayAutosB[k].tiempoEspera >= 12){
+                arrayAutosB.splice(k,1);
+                autosPerdidos++;
+                gananciaActual--;
+            }
+        } 
+
+        var finViaje = reloj + duracionViaje;
+        colaA = arrayAutosA.length;
+        colaB = arrayAutosB.length;
+        gananciaAC+= gananciaActual;
+        autosPerdidosAC+= autosPerdidos;
+
+        filaTabla.splice(0, 1);
+        var insertarRegistro = [reloj,proxLlegadaA,proxLlegadaB,finViaje,colaA,colaB,gananciaAC,tiempoViajeAC,cantAutosFinViaje,autosPerdidosAC];
+
+        filaTabla.push(insertarRegistro);
+    
+        if((i >= desde && i <= hasta) || i == cantEventos) {
+            grillaFinal.push(insertarRegistro);
+        }
+
+    
+    }
+
+
+    console.log(grillaFinal);   
+
+    return grillaFinal;
+
 }
 
 
