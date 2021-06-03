@@ -132,7 +132,7 @@ function generarColasPA(cantEventos, desde, hasta){
 
     
         filaTabla.splice(0, 1);
-        var insertarRegistro = [reloj,proxLlegadaA,proxLlegadaB,finViaje,colaA,colaB,gananciaAC,tiempoViajeAC,cantAutosFinViaje,autosPerdidosAC];
+        var insertarRegistro = [reloj, proxLlegadaA, proxLlegadaB, finViaje, ubicacionVagon, colaA, colaB, gananciaAC, tiempoViajeAC, cantAutosFinViaje, autosPerdidosAC];
     
         filaTabla.push(insertarRegistro);
     
@@ -174,7 +174,7 @@ function rellenarTabla() {
     }
 
 
-    tablaColas.innerHTML = "<tr><th>Reloj</th><th>Proxima Llegada A</th><th>Proxima Llegada B</th><th>Fin de Viaje Actual</th><th>Cola A</th><th>Cola B</th><th>AC ganancia</th><th>AC tiempos de viaje</th><th>Cantidad de Autos con viaje finalizado</th><th>Cantidad de Autos perdidos</th></tr>";
+    tablaColas.innerHTML = "<tr><th>Reloj</th><th>Proxima Llegada A</th><th>Proxima Llegada B</th><th>Fin de Viaje Actual</th><th>Vagón</th><th>Cola A</th><th>Cola B</th><th>AC ganancia</th><th>AC tiempos de viaje</th><th>Cantidad de Autos con viaje finalizado</th><th>Cantidad de Autos perdidos</th></tr>";
     var grilla;
     if(politica=="PA"? grilla = generarColasPA(cantEventos,desde,hasta): grilla = generarColasPB(cantEventos,desde,hasta))
     for(var i=0; i<grilla.length; i++) {
@@ -184,16 +184,17 @@ function rellenarTabla() {
         cadena += '<td>' + grilla[i][3] + '</td>';
         cadena += '<td>' + grilla[i][4] + '</td>';
         cadena += '<td>' + grilla[i][5] + '</td>';
+        cadena += '<td>' + grilla[i][6] + '</td>';
         if(i == grilla.length-1) {
-            cadena += '<td class="metrica">' + grilla[i][6] + '</td>';
             cadena += '<td class="metrica">' + grilla[i][7] + '</td>';
             cadena += '<td class="metrica">' + grilla[i][8] + '</td>';
-            cadena += '<td class="metrica">' + grilla[i][9] + '</td></tr>';
+            cadena += '<td class="metrica">' + grilla[i][9] + '</td>';
+            cadena += '<td class="metrica">' + grilla[i][10] + '</td></tr>';
         } else {
-            cadena += '<td>' + grilla[i][6] + '</td>';
             cadena += '<td>' + grilla[i][7] + '</td>';
             cadena += '<td>' + grilla[i][8] + '</td>';
-            cadena += '<td>' + grilla[i][9] + '</td></tr>';
+            cadena += '<td>' + grilla[i][9] + '</td>';
+            cadena += '<td>' + grilla[i][10] + '</td></tr>';
         }
 
         tablaColas.innerHTML += cadena;
