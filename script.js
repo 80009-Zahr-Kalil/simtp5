@@ -9,6 +9,8 @@ const cantLlegadaB = 3;
 var duracionViaje;
 const capacidadVagon = 5;
 
+const politicaTitulo = document.getElementById("politica");
+
 
 
 var tablaColas = document.getElementById("tablaColas");
@@ -37,6 +39,8 @@ function generarColasPA(cantEventos, desde, hasta){
     var grillaFinal = []; 
     duracionViaje = 5;
     var proxLlegadaB = 5;
+    var finViaje = 0;
+
     
 
     for (var i=1; i<=cantEventos ; i++){
@@ -44,8 +48,8 @@ function generarColasPA(cantEventos, desde, hasta){
         var reloj = i;
         var autosPerdidos = 0;
         var proxLlegadaA = reloj + tiempoLlegadaA;
-        var finViaje = reloj + duracionViaje;
         var gananciaActual = 0;
+
 
         if(reloj == proxLlegadaB){
             proxLlegadaB += tiempoLlegadaB;
@@ -91,7 +95,9 @@ function generarColasPA(cantEventos, desde, hasta){
 
             if (reloj >= 10){
                 tiempoViajeAC += 5;
+
             }
+            finViaje = reloj + duracionViaje;
         }
         
         for (var k=0; k<arrayAutosB.length; k++){     
@@ -151,6 +157,20 @@ function rellenarTabla() {
     var hasta = obtenerInputs()[2];
     var politica = obtenerInputs()[3]; 
 
+    if(politica == "0"){
+        return 0;
+    }
+
+    if(politica == "PA"){
+        politicaTitulo.innerHTML = "<strong> Politica A:</strong> El vagon espera completar los 5 autos para iniciar traslados en máxima capacidad.";
+        politicaTitulo.style.display = "block";
+    }
+    else{
+        politicaTitulo.innerHTML = "<strong> Politica B:</strong> Cuando se finaliza un traslado se inicia de inmediato un nuevo traslado hacia la otra orilla aunque no lleve automóviles (va vacío). El tiempo de traslado sin autos (vacío) es de 3 minutos por no haber carga y descarga.";
+        politicaTitulo.style.display = "block";
+    }
+
+
     tablaColas.innerHTML = "<tr><th>Reloj</th><th>Proxima Llegada A</th><th>Proxima Llegada B</th><th>Fin de Viaje Actual</th><th>Cola A</th><th>Cola B</th><th>AC ganancia</th><th>AC tiempos de viaje</th><th>Cantidad de Autos con viaje finalizado</th><th>Cantidad de Autos perdidos</th></tr>";
     var grilla;
     if(politica=="PA"? grilla = generarColasPA(cantEventos,desde,hasta): grilla = generarColasPB(cantEventos,desde,hasta))
@@ -183,21 +203,19 @@ function generarColasPB(cantEventos, desde, hasta){
     var filaTabla = [ new Array(24).fill(0), new Array(24).fill(0)];
     var grillaFinal = [];
     var proxLlegadaB = 5;
-    var finViaje = 0;
+    var finViaje = 1;
+    duracionViaje = 5; 
+
 
     for (var i=1; i<=cantEventos ; i++){
         var reloj = i;
         var autosPerdidos = 0;
-        duracionViaje = 5; 
         var proxLlegadaA = reloj + tiempoLlegadaA;
         var gananciaActual = 0;
-
-
 
         if(reloj == proxLlegadaB){
             proxLlegadaB += tiempoLlegadaB;
         }
-
         
 
         var autoA = {
@@ -216,6 +234,9 @@ function generarColasPB(cantEventos, desde, hasta){
                 }
                 arrayAutosB.push(autoB);
             }
+        }
+
+        if (reloj == finViaje){
 
             if(ubicacionVagon=="A"){
                 ubicacionVagon = "B";
@@ -226,7 +247,7 @@ function generarColasPB(cantEventos, desde, hasta){
                     cantAutosFinViaje += 5;
                     gananciaActual+= (capacidadVagon * gananciaAuto) - costoViaje;
                     tiempoViajeAC += 5;
-                    finViaje = reloj + duracionViaje ;
+                    // finViaje = reloj + duracionViaje ;
                 } 
                 else{
                     arrayAutosA.splice(0,longitud);
@@ -235,11 +256,11 @@ function generarColasPB(cantEventos, desde, hasta){
                     if(longitud == 0){
                         tiempoViajeAC += 3;
                         duracionViaje = 3;
-                        finViaje = reloj + duracionViaje ;
+                        // finViaje = reloj + duracionViaje ;
                     }
                     else{
                         tiempoViajeAC += 5;
-                        finViaje = reloj + duracionViaje ;
+                        // finViaje = reloj + duracionViaje ;
                     }
                 }            
             }
@@ -253,7 +274,7 @@ function generarColasPB(cantEventos, desde, hasta){
                     cantAutosFinViaje += 5;
                     gananciaActual+= (capacidadVagon * gananciaAuto) - costoViaje;
                     tiempoViajeAC += 5;
-                    finViaje = reloj + duracionViaje ;
+                    // finViaje = reloj + duracionViaje ;
 
                 } 
                 else{
@@ -262,14 +283,18 @@ function generarColasPB(cantEventos, desde, hasta){
                     gananciaActual+= (longitud * gananciaAuto) - costoViaje;
                     if(longitud == 0){
                         tiempoViajeAC += 3;
-                        finViaje = reloj + duracionViaje ;
+                        duracionViaje = 3;
+                        // finViaje = reloj + duracionViaje ;
                     }
                     else{
                         tiempoViajeAC += 5;
-                        finViaje = reloj + duracionViaje ;
+                        // finViaje = reloj + duracionViaje ;
                     }
                 }                
             }  
+
+            finViaje = reloj + duracionViaje;
+
         }
 
         for (var k=0; k<arrayAutosB.length; k++){     
@@ -291,7 +316,6 @@ function generarColasPB(cantEventos, desde, hasta){
             }
         } 
 
-        var finViaje = reloj + duracionViaje;
         colaA = arrayAutosA.length;
         colaB = arrayAutosB.length;
         gananciaAC+= gananciaActual;
@@ -315,6 +339,7 @@ function generarColasPB(cantEventos, desde, hasta){
     return grillaFinal;
 
 }
+
 
 
 
