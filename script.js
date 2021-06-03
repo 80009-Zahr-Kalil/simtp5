@@ -24,6 +24,7 @@ function obtenerInputs(){
     return [cantEventos, desde, hasta, politica];
 }
 
+
 function generarColasPA(cantEventos, desde, hasta){
 
     var ubicacionVagon = "A";
@@ -148,8 +149,6 @@ function generarColasPA(cantEventos, desde, hasta){
 }
 
 
-
-
 function rellenarTabla() {
 
     var cantEventos = obtenerInputs()[0];
@@ -201,6 +200,7 @@ function rellenarTabla() {
     }
 
 }
+
 
 function generarColasPB(cantEventos, desde, hasta){
     var ubicacionVagon = "A";
@@ -351,11 +351,6 @@ function generarColasPB(cantEventos, desde, hasta){
     return grillaFinal;
 
 }
-
-
-
-
-// document.getElementsByClassName("btn")[0].addEventListener("click",()=>{generarColasPA(30)});
 
 
 function main() {
