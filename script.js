@@ -158,16 +158,20 @@ function rellenarTabla() {
     var politica = obtenerInputs()[3]; 
 
     if(politica == "0"){
+        politicaTitulo.style.display = "none";
+        document.getElementsByClassName("container")[0].style.display = "none"
         return 0;
     }
 
     if(politica == "PA"){
         politicaTitulo.innerHTML = "<strong> Politica A:</strong> El vagon espera completar los 5 autos para iniciar traslados en máxima capacidad.";
         politicaTitulo.style.display = "block";
+        document.getElementsByClassName("container")[0].style.display = "block"
     }
-    else{
+    if(politica == "PB"){
         politicaTitulo.innerHTML = "<strong> Politica B:</strong> Cuando se finaliza un traslado se inicia de inmediato un nuevo traslado hacia la otra orilla aunque no lleve automóviles (va vacío). El tiempo de traslado sin autos (vacío) es de 3 minutos por no haber carga y descarga.";
         politicaTitulo.style.display = "block";
+        document.getElementsByClassName("container")[0].style.display = "block"
     }
 
 
@@ -181,10 +185,18 @@ function rellenarTabla() {
         cadena += '<td>' + grilla[i][3] + '</td>';
         cadena += '<td>' + grilla[i][4] + '</td>';
         cadena += '<td>' + grilla[i][5] + '</td>';
-        cadena += '<td>' + grilla[i][6] + '</td>';
-        cadena += '<td>' + grilla[i][7] + '</td>';
-        cadena += '<td>' + grilla[i][8] + '</td>';
-        cadena += '<td>' + grilla[i][9] + '</td></tr>';
+        if(i == grilla.length-1) {
+            cadena += '<td class="metrica">' + grilla[i][6] + '</td>';
+            cadena += '<td class="metrica">' + grilla[i][7] + '</td>';
+            cadena += '<td class="metrica">' + grilla[i][8] + '</td>';
+            cadena += '<td class="metrica">' + grilla[i][9] + '</td></tr>';
+        } else {
+            cadena += '<td>' + grilla[i][6] + '</td>';
+            cadena += '<td>' + grilla[i][7] + '</td>';
+            cadena += '<td>' + grilla[i][8] + '</td>';
+            cadena += '<td>' + grilla[i][9] + '</td></tr>';
+        }
+
         tablaColas.innerHTML += cadena;
     }
 
